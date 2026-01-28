@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juancito Store - Cusco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        
+        /* Tarjetas del Catálogo */
+        .card-img-top {
+            height: 250px;
+            object-fit: contain;
+            padding: 20px;
+            background-color: #fff;
+            transition: transform 0.2s;
+        }
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        .seccion-oculta { display: none; }
+        .cursor-pointer { cursor: pointer; }
+
+        /* --- VISTA DETALLE (Estilo Nike) --- */
+        .galeria-container { display: flex; gap: 15px; }
+        .miniaturas { display: flex; flex-direction: column; gap: 10px; }
+        .img-miniatura {
+            width: 70px; height: 70px; object-fit: cover;
+            border-radius: 4px; cursor: pointer; border: 1px solid #e5e5e5;
+        }
+        .img-miniatura:hover { border-color: #111; }
+        
+        .img-principal-container {
+            flex-grow: 1; background-color: #f5f5f5; border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+            height: 500px; overflow: hidden;
+        }
+        .img-principal { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        /* Botones de Talla/Variante */
+        .btn-talla {
+            border: 1px solid #e5e5e5; background: white; color: #111;
+            padding: 10px; width: 100%; border-radius: 4px; margin-bottom: 10px; transition: 0.2s;
+        }
+        .btn-talla:hover { border-color: #111; }
+
+        /* Botón Negro de Compra */
+        .btn-negro {
+            background-color: #111; color: white; border-radius: 30px;
+            padding: 18px; width: 100%; font-weight: bold; border: none;
+        }
+        .btn-negro:hover { background-color: #333; }
+
+        /* Footer Links */
+        footer a { color: #ccc; text-decoration: none; transition: 0.2s; }
+        footer a:hover { color: #fff; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" onclick="cambiarVista('inicio')">JUANCITO STORE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="cambiarVista('inicio')">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="cambiarVista('catalogo')">Catálogo</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning fw-bold" href="#" onclick="cambiarVista('carrito')">
+                            <i class="fas fa-shopping-cart"></i> Carrito (<span id="contador-carrito">0</span>)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="vista-inicio">
+        <div class="bg-light py-5 text-center mb-5">
+            <div class="container">
+                <h1 class="display-4 fw-bold">Potencia tu Setup</h1>
+                <p class="lead text-muted">La mejor tecnología y componentes en Cusco.</p>
+                <button class="btn btn-dark btn-lg rounded-pill px-5 mt-3" onclick="cambiarVista('catalogo')">Ver Productos</button>
+            </div>
+        </div>
+        <div class="container text-center mb-5">
+            <h3>Categorías Destacadas</h3>
+            <div class="row mt-4">
+                <div class="col-md-4"><div class="p-4 border bg-light">📱 Celulares</div></div>
+                <div class="col-md-4"><div class="p-4 border bg-light">💻 Periféricos</div></div>
+                <div class="col-md-4"><div class="p-4 border bg-light">⚡ Electrónica</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vista-catalogo" class="seccion-oculta container mt-5">
+        <h2 class="mb-4 fw-bold">Catálogo Completo</h2>
+        <div class="row" id="contenedor-productos">
+            </div>
+    </div>
+
+    <div id="vista-detalle" class="seccion-oculta container mt-5 mb-5">
+        <button class="btn btn-link text-decoration-none text-dark mb-4 ps-0" onclick="cambiarVista('catalogo')">
+            <i class="fas fa-arrow-left"></i> Volver al catálogo
+        </button>
+        
+        <div class="row">
+            <div class="col-md-7">
+                <div class="galeria-container">
+                    <div class="miniaturas" id="detalle-miniaturas"></div>
+                    <div class="img-principal-container">
+                        <img id="detalle-img-principal" src="" class="img-principal" alt="Producto Principal">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 ps-md-5 mt-4 mt-md-0">
+                <h2 id="detalle-titulo" class="fw-bold mb-1">Nombre del Producto</h2>
+                <p id="detalle-modelo" class="text-muted">Modelo: XYZ-123</p>
+                <h4 id="detalle-precio" class="my-4 fw-bold">S/ 0.00</h4>
+
+                <p class="fw-bold mb-2">Selecciona una opción</p>
+                <div class="row g-2 mb-4">
+                    <div class="col-4"><button class="btn btn-talla">Estándar</button></div>
+                    <div class="col-4"><button class="btn btn-talla">Pro</button></div>
+                    <div class="col-4"><button class="btn btn-talla">Premium</button></div>
+                </div>
+
+                <button id="btn-agregar-detalle" class="btn btn-negro mb-3 shadow-sm">Añadir a la cesta</button>
+                <button class="btn btn-outline-dark w-100 rounded-pill py-3 fw-bold">Favorito <i class="far fa-heart"></i></button>
+
+                <div class="mt-5">
+                    <p id="detalle-descripcion" class="text-secondary">Descripción...</p>
+                    <hr>
+                    <details>
+                        <summary class="fw-bold cursor-pointer py-2">Envíos y devoluciones</summary>
+                        <p class="small mt-2 text-muted">Envíos gratuitos en Cusco a partir de S/ 200. Garantía de 1 año.</p>
+                    </details>
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <div id="contenedor-setup" class="mt-5 pt-5 border-top">
+            <h3 class="mb-4 fw-bold">Completa el Look / Setup</h3>
+            <div class="row" id="lista-setup"></div>
+        </div>
+
+        <div id="contenedor-similares" class="mt-5">
+            <h3 class="mb-4 fw-bold">También te podría interesar</h3>
+            <div class="row" id="lista-similares"></div>
+        </div>
+    </div>
+
+    <div id="vista-carrito" class="seccion-oculta container mt-5">
+        <h2 class="mb-4">Tu Cesta</h2>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light"><tr><th>Producto</th><th>Precio</th></tr></thead>
+                <tbody id="lista-carrito"></tbody>
+            </table>
+        </div>
+        <div class="text-end mt-4 border-top pt-3">
+            <h3>Total: S/ <span id="total-precio">0.00</span></h3>
+            <button class="btn btn-primary btn-lg mt-3" onclick="alert('¡Gracias por tu compra! Te contactaremos.')">Finalizar Pedido</button>
+            <button class="btn btn-danger mt-3 ms-2" onclick="vaciarCarrito()">Vaciar Cesta</button>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container text-center text-md-start">
+            <div class="row text-center text-md-start">
+                
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Juancito Store</h5>
+                    <p>Especialistas en tecnología y setups en Cusco. Traemos lo último en hardware para potenciar tu trabajo y juego.</p>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold">Ayuda</h5>
+                    <p><a href="#">Estado del pedido</a></p>
+                    <p><a href="#">Envíos a Provincia</a></p>
+                    <p><a href="#">Devoluciones</a></p>
+                    <p><a href="#">Opciones de pago</a></p>
+                </div>
+
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold">Productos</h5>
+                    <p><a href="#" onclick="cambiarVista('catalogo')">Laptops</a></p>
+                    <p><a href="#" onclick="cambiarVista('catalogo')">Periféricos</a></p>
+                    <p><a href="#" onclick="cambiarVista('catalogo')">Componentes</a></p>
+                    <p><a href="#" onclick="cambiarVista('catalogo')">Ofertas</a></p>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold">Contacto</h5>
+                    <p><i class="fas fa-home mr-3"></i> Cusco, Perú - Av. La Cultura</p>
+                    <p><i class="fas fa-envelope mr-3"></i> info@juancitostore.com</p>
+                    <p><i class="fas fa-phone mr-3"></i> +51 987 654 321</p>
+                </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p> © 2026 <strong>Juancito Store</strong>. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-5 col-lg-4">
+                    <div class="text-center text-md-end">
+                        <ul class="list-unstyled list-inline">
+                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-facebook"></i></a></li>
+                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-tiktok"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- 1. BASE DE DATOS DE PRODUCTOS ---
+        const productos = [
+            {
+                id: 1,
+                nombre: "Samsung S23 Ultra",
+                precio: 3500.00,
+                modelo: "SM-S918B",
+                categoria: "celulares",
+                setup: [],
+                descripcion: "El Galaxy S23 Ultra incorpora la cámara más avanzada hasta la fecha, con un sensor de 200MP. Incluye el S-Pen integrado.",
+                portada: "https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg",
+                imagenes: [
+                    "https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg",
+                    "https://images.samsung.com/is/image/samsung/p6pim/pe/sm-s918bzphebp/gallery/pe-galaxy-s23-ultra-s918-sm-s918bzphebp-534855283?$650_519_PNG$",
+                    "https://img.global.news.samsung.com/latin/wp-content/uploads/2023/02/Galaxy-S23-Ultra_Green-Back_R30.jpg"
+                ]
+            },
+            {
+                id: 2,
+                nombre: "Kit Arduino UNO R3",
+                precio: 50.00,
+                modelo: "ARD-KIT-01",
+                categoria: "electronica",
+                setup: [],
+                descripcion: "El kit esencial para estudiantes de ingeniería. Incluye placa compatible Arduino UNO, cables y pines.",
+                portada: "https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png",
+                imagenes: ["https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png"]
+            },
+            {
+                id: 3,
+                nombre: "Teclado Mecánico RGB",
+                precio: 120.00,
+                modelo: "GM-K85-BLUE",
+                categoria: "perifericos",
+                setup: [4, 5], // RELACIÓN: Muestra Mouse (4) y Pad (5)
+                descripcion: "Teclado mecánico TKL con switches azules audibles y retroiluminación RGB.",
+                portada: "https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp",
+                imagenes: [
+                    "https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp",
+                    "https://m.media-amazon.com/images/I/61w0+7w6-sL._AC_SX466_.jpg"
+                ]
+            },
+            {
+                id: 4,
+                nombre: "Mouse Gamer Pro",
+                precio: 85.00,
+                modelo: "M-PRO-X",
+                categoria: "perifericos",
+                setup: [3, 5], // RELACIÓN: Muestra Teclado (3) y Pad (5)
+                descripcion: "Sensor óptico de alta precisión y peso ultraligero para eSports.",
+                portada: "https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1",
+                imagenes: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1"]
+            },
+            {
+                id: 5,
+                nombre: "Mousepad XXL Speed",
+                precio: 45.00,
+                modelo: "PAD-XXL",
+                categoria: "perifericos",
+                setup: [3, 4], // RELACIÓN: Muestra Teclado (3) y Mouse (4)
+                descripcion: "Superficie de tela optimizada de 90x40cm para cubrir todo tu escritorio.",
+                portada: "https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg",
+                imagenes: ["https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg"]
+            }
+        ];
+
+        // --- 2. CARGAR CATÁLOGO ---
+        function cargarCatalogo() {
+            const contenedor = document.getElementById('contenedor-productos');
+            contenedor.innerHTML = "";
+            
+            productos.forEach(producto => {
+                const html = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm h-100 cursor-pointer" onclick="verProducto(${producto.id})">
+                            <img src="${producto.portada}" class="card-img-top" alt="${producto.nombre}">
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate">${producto.nombre}</h5>
+                                <p class="card-text text-muted">S/ ${producto.precio.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contenedor.innerHTML += html;
+            });
+        }
+
+        // --- 3. VISTA DETALLE Y RECOMENDACIONES ---
+        function verProducto(id) {
+            const producto = productos.find(p => p.id === id);
+
+            // Llenar info
+            document.getElementById('detalle-titulo').innerText = producto.nombre;
+            document.getElementById('detalle-precio').innerText = "S/ " + producto.precio.toFixed(2);
+            document.getElementById('detalle-modelo').innerText = "Modelo: " + producto.modelo;
+            document.getElementById('detalle-descripcion').innerText = producto.descripcion;
+            
+            const btn = document.getElementById('btn-agregar-detalle');
+            btn.onclick = function() { agregarAlCarrito(producto.nombre, producto.precio); };
+
+            // Fotos
+            const imgPrincipal = document.getElementById('detalle-img-principal');
+            imgPrincipal.src = producto.portada;
+            const divMiniaturas = document.getElementById('detalle-miniaturas');
+            divMiniaturas.innerHTML = ""; 
+
+            producto.imagenes.forEach(imgUrl => {
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.className = "img-miniatura";
+                img.onclick = function() { imgPrincipal.src = imgUrl; };
+                divMiniaturas.appendChild(img);
+            });
+
+            // --- GENERAR RECOMENDACIONES ---
+            function generarTarjetas(lista, contenedorID, mensajeVacio) {
+                const contenedor = document.getElementById(contenedorID);
+                contenedor.innerHTML = ""; 
+                
+                if(lista.length === 0) {
+                    contenedor.innerHTML = `<p class='text-muted small'>${mensajeVacio}</p>`;
+                    return;
+                }
+
+                lista.forEach(item => {
+                    const html = `
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="card h-100 shadow-sm cursor-pointer border-0 bg-light" onclick="verProducto(${item.id})">
+                                <img src="${item.portada}" class="card-img-top p-3 bg-white rounded" style="height: 150px; object-fit: contain;">
+                                <div class="card-body p-2 text-center">
+                                    <h6 class="card-title text-truncate small fw-bold">${item.nombre}</h6>
+                                    <p class="card-text text-primary small mb-2">S/ ${item.precio.toFixed(2)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    contenedor.innerHTML += html;
+                });
+            }
+
+            // A) "También te podría interesar" (Misma categoría)
+            const similares = productos.filter(p => p.categoria === producto.categoria && p.id !== producto.id);
+            generarTarjetas(similares, 'lista-similares', 'No hay productos similares por ahora.');
+
+            // B) "Completa el Setup" (Definido manualmente en setup[])
+            const setupItems = productos.filter(p => producto.setup.includes(p.id));
+            generarTarjetas(setupItems, 'lista-setup', 'No hay complementos sugeridos para este producto.');
+
+            cambiarVista('detalle');
+            window.scrollTo(0, 0);
+        }
+
+        // --- 4. NAVEGACIÓN ---
+        function cambiarVista(vista) {
+            document.getElementById('vista-inicio').style.display = 'none';
+            document.getElementById('vista-catalogo').style.display = 'none';
+            document.getElementById('vista-carrito').style.display = 'none';
+            document.getElementById('vista-detalle').style.display = 'none';
+            
+            document.getElementById('vista-' + vista).style.display = 'block';
+            if(vista === 'catalogo') cargarCatalogo();
+        }
+
+        // --- 5. CARRITO ---
+        let total = 0;
+        let conteo = 0;
+
+        function agregarAlCarrito(nombre, precio) {
+            total += precio;
+            conteo++;
+            document.getElementById('total-precio').innerText = total.toFixed(2);
+            document.getElementById('contador-carrito').innerText = conteo;
+            
+            const tabla = document.getElementById('lista-carrito');
+            tabla.innerHTML += `<tr><td>${nombre}</td><td>S/ ${precio.toFixed(2)}</td></tr>`;
+            alert(`¡Agregaste ${nombre} al carrito!`);
+        }
+
+        function vaciarCarrito() {
+            total = 0;
+            conteo = 0;
+            document.getElementById('total-precio').innerText = "0.00";
+            document.getElementById('contador-carrito').innerText = "0";
+            document.getElementById('lista-carrito').innerHTML = "";
+        }
+
+        // INICIAR
+        cargarCatalogo();
+    </script>
+</body>
+</html>
