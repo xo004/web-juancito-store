@@ -9,72 +9,77 @@
     
     <style>
         /* --- ESTILOS GENERALES --- */
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; }
         
         /* Tarjetas del Catálogo */
+        .card { border: none; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
         .card-img-top {
             height: 250px;
             object-fit: contain;
             padding: 20px;
             background-color: #fff;
-            transition: transform 0.2s;
+            border-bottom: 1px solid #eee;
         }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
+        
         .seccion-oculta { display: none; }
         .cursor-pointer { cursor: pointer; }
 
-        /* --- VISTA DETALLE (Estilo Nike) --- */
+        /* --- VISTA DETALLE --- */
         .galeria-container { display: flex; gap: 15px; }
         .miniaturas { display: flex; flex-direction: column; gap: 10px; }
         .img-miniatura {
             width: 70px; height: 70px; object-fit: cover;
             border-radius: 4px; cursor: pointer; border: 1px solid #e5e5e5;
         }
-        .img-miniatura:hover { border-color: #111; }
+        .img-miniatura:hover { border-color: #000; }
         
         .img-principal-container {
-            flex-grow: 1; background-color: #f5f5f5; border-radius: 8px;
+            flex-grow: 1; background-color: #fff; border-radius: 8px;
             display: flex; justify-content: center; align-items: center;
-            height: 500px; overflow: hidden;
+            height: 500px; overflow: hidden; border: 1px solid #eee;
         }
         .img-principal { max-width: 100%; max-height: 100%; object-fit: contain; }
         
-        /* Botones de Talla/Variante */
+        /* Botones */
         .btn-talla {
             border: 1px solid #e5e5e5; background: white; color: #111;
             padding: 10px; width: 100%; border-radius: 4px; margin-bottom: 10px; transition: 0.2s;
         }
-        .btn-talla:hover { border-color: #111; }
+        .btn-talla:hover { border-color: #111; background-color: #f8f9fa; }
 
-        /* Botón Negro de Compra */
         .btn-negro {
             background-color: #111; color: white; border-radius: 30px;
             padding: 18px; width: 100%; font-weight: bold; border: none;
         }
         .btn-negro:hover { background-color: #333; }
 
-        /* Footer Links */
+        /* Filtros */
+        .btn-filtro { margin: 0 5px; border-radius: 20px; padding: 8px 20px; }
+        .btn-filtro.active { background-color: #111; color: white; }
+
+        /* Footer */
         footer a { color: #ccc; text-decoration: none; transition: 0.2s; }
         footer a:hover { color: #fff; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#" onclick="cambiarVista('inicio')">JUANCITO STORE</a>
+            <a class="navbar-brand fw-bold" href="#" onclick="cambiarVista('inicio')">
+                <i class="fas fa-microchip text-warning"></i> JUANCITO STORE
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#" onclick="cambiarVista('inicio')">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" onclick="cambiarVista('catalogo')">Catálogo</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link text-warning fw-bold" href="#" onclick="cambiarVista('carrito')">
-                            <i class="fas fa-shopping-cart"></i> Carrito (<span id="contador-carrito">0</span>)
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-warning fw-bold rounded-pill px-4" href="#" onclick="cambiarVista('carrito')">
+                            <i class="fas fa-shopping-cart"></i> <span id="contador-carrito">0</span>
                         </a>
                     </li>
                 </ul>
@@ -83,31 +88,55 @@
     </nav>
 
     <div id="vista-inicio">
-        <div class="bg-light py-5 text-center mb-5">
-            <div class="container">
-                <h1 class="display-4 fw-bold">Potencia tu Setup</h1>
-                <p class="lead text-muted">La mejor tecnología y componentes en Cusco.</p>
-                <button class="btn btn-dark btn-lg rounded-pill px-5 mt-3" onclick="cambiarVista('catalogo')">Ver Productos</button>
+        <div class="bg-dark text-white py-5 text-center mb-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;">
+            <div class="container py-5">
+                <h1 class="display-3 fw-bold">Potencia tu Setup</h1>
+                <p class="lead mb-4">La mejor tecnología y componentes en Cusco.</p>
+                <button class="btn btn-warning btn-lg rounded-pill px-5 fw-bold" onclick="cambiarVista('catalogo')">Ver Tienda</button>
             </div>
         </div>
         <div class="container text-center mb-5">
-            <h3>Categorías Destacadas</h3>
-            <div class="row mt-4">
-                <div class="col-md-4"><div class="p-4 border bg-light">📱 Celulares</div></div>
-                <div class="col-md-4"><div class="p-4 border bg-light">💻 Periféricos</div></div>
-                <div class="col-md-4"><div class="p-4 border bg-light">⚡ Electrónica</div></div>
+            <h3 class="fw-bold mb-4">¿Qué estás buscando?</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="p-4 border rounded bg-white shadow-sm cursor-pointer" onclick="irACategoria('celulares')">
+                        <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                        <h5>Celulares</h5>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded bg-white shadow-sm cursor-pointer" onclick="irACategoria('perifericos')">
+                        <i class="fas fa-keyboard fa-3x text-success mb-3"></i>
+                        <h5>Periféricos</h5>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded bg-white shadow-sm cursor-pointer" onclick="irACategoria('electronica')">
+                        <i class="fas fa-plug fa-3x text-danger mb-3"></i>
+                        <h5>Electrónica</h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="vista-catalogo" class="seccion-oculta container mt-5">
-        <h2 class="mb-4 fw-bold">Catálogo Completo</h2>
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-4">Nuestro Catálogo</h2>
+            <div class="d-flex justify-content-center flex-wrap gap-2">
+                <button class="btn btn-outline-dark btn-filtro active" onclick="filtrarCatalogo('todos', this)">Todos</button>
+                <button class="btn btn-outline-dark btn-filtro" onclick="filtrarCatalogo('celulares', this)">Celulares</button>
+                <button class="btn btn-outline-dark btn-filtro" onclick="filtrarCatalogo('perifericos', this)">Periféricos</button>
+                <button class="btn btn-outline-dark btn-filtro" onclick="filtrarCatalogo('electronica', this)">Electrónica</button>
+            </div>
+        </div>
+        
         <div class="row" id="contenedor-productos">
             </div>
     </div>
 
     <div id="vista-detalle" class="seccion-oculta container mt-5 mb-5">
-        <button class="btn btn-link text-decoration-none text-dark mb-4 ps-0" onclick="cambiarVista('catalogo')">
+        <button class="btn btn-link text-decoration-none text-dark mb-4 ps-0 fw-bold" onclick="cambiarVista('catalogo')">
             <i class="fas fa-arrow-left"></i> Volver al catálogo
         </button>
         
@@ -124,104 +153,109 @@
             <div class="col-md-5 ps-md-5 mt-4 mt-md-0">
                 <h2 id="detalle-titulo" class="fw-bold mb-1">Nombre del Producto</h2>
                 <p id="detalle-modelo" class="text-muted">Modelo: XYZ-123</p>
-                <h4 id="detalle-precio" class="my-4 fw-bold">S/ 0.00</h4>
+                <h3 id="detalle-precio" class="my-4 fw-bold text-primary">S/ 0.00</h3>
 
-                <p class="fw-bold mb-2">Selecciona una opción</p>
+                <p class="fw-bold mb-2">Opciones disponibles</p>
                 <div class="row g-2 mb-4">
                     <div class="col-4"><button class="btn btn-talla">Estándar</button></div>
                     <div class="col-4"><button class="btn btn-talla">Pro</button></div>
-                    <div class="col-4"><button class="btn btn-talla">Premium</button></div>
                 </div>
 
-                <button id="btn-agregar-detalle" class="btn btn-negro mb-3 shadow-sm">Añadir a la cesta</button>
-                <button class="btn btn-outline-dark w-100 rounded-pill py-3 fw-bold">Favorito <i class="far fa-heart"></i></button>
+                <button id="btn-agregar-detalle" class="btn btn-negro mb-3 shadow-sm">
+                    Añadir al Carrito <i class="fas fa-shopping-bag ms-2"></i>
+                </button>
+                
+                <div class="mt-4 p-3 bg-light rounded border">
+                    <p class="mb-0 small"><i class="fas fa-truck text-success"></i> Envío gratis en Cusco por compras mayores a S/ 200.</p>
+                </div>
 
-                <div class="mt-5">
+                <div class="mt-4">
+                    <h5 class="fw-bold">Descripción</h5>
                     <p id="detalle-descripcion" class="text-secondary">Descripción...</p>
-                    <hr>
-                    <details>
-                        <summary class="fw-bold cursor-pointer py-2">Envíos y devoluciones</summary>
-                        <p class="small mt-2 text-muted">Envíos gratuitos en Cusco a partir de S/ 200. Garantía de 1 año.</p>
-                    </details>
-                    <hr>
                 </div>
             </div>
         </div>
 
         <div id="contenedor-setup" class="mt-5 pt-5 border-top">
-            <h3 class="mb-4 fw-bold">Completa el Look / Setup</h3>
+            <h4 class="mb-4 fw-bold">Completa el Setup</h4>
             <div class="row" id="lista-setup"></div>
         </div>
 
         <div id="contenedor-similares" class="mt-5">
-            <h3 class="mb-4 fw-bold">También te podría interesar</h3>
+            <h4 class="mb-4 fw-bold">También te podría interesar</h4>
             <div class="row" id="lista-similares"></div>
         </div>
     </div>
 
     <div id="vista-carrito" class="seccion-oculta container mt-5">
-        <h2 class="mb-4">Tu Cesta</h2>
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead class="table-light"><tr><th>Producto</th><th>Precio</th></tr></thead>
-                <tbody id="lista-carrito"></tbody>
-            </table>
-        </div>
-        <div class="text-end mt-4 border-top pt-3">
-            <h3>Total: S/ <span id="total-precio">0.00</span></h3>
-            <button class="btn btn-primary btn-lg mt-3" onclick="alert('¡Gracias por tu compra! Te contactaremos.')">Finalizar Pedido</button>
-            <button class="btn btn-danger mt-3 ms-2" onclick="vaciarCarrito()">Vaciar Cesta</button>
+        <h2 class="mb-4 fw-bold">Tu Carrito de Compras</h2>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="table-responsive shadow-sm rounded">
+                    <table class="table align-middle table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-carrito">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4 mt-md-0">
+                <div class="card shadow-sm p-4">
+                    <h4 class="fw-bold mb-4">Resumen</h4>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Subtotal</span>
+                        <span id="resumen-subtotal">S/ 0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success">
+                        <span>Descuento</span>
+                        <span>S/ 0.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h4 fw-bold">Total</span>
+                        <span class="h4 fw-bold text-primary" id="total-precio">S/ 0.00</span>
+                    </div>
+                    
+                    <button class="btn btn-success w-100 py-3 fw-bold mb-2" onclick="finalizarCompraWhatsApp()">
+                        <i class="fab fa-whatsapp fa-lg me-2"></i> Pedir por WhatsApp
+                    </button>
+                    <button class="btn btn-outline-danger w-100 py-2" onclick="vaciarCarrito()">
+                        Vaciar Carrito
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
     <footer class="bg-dark text-white pt-5 pb-4 mt-5">
         <div class="container text-center text-md-start">
             <div class="row text-center text-md-start">
-                
-                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                <div class="col-md-3 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold text-warning">Juancito Store</h5>
-                    <p>Especialistas en tecnología y setups en Cusco. Traemos lo último en hardware para potenciar tu trabajo y juego.</p>
+                    <p>Tecnología y setups en Cusco. Hardware de calidad para potenciar tu vida.</p>
                 </div>
-
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                <div class="col-md-2 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold">Ayuda</h5>
-                    <p><a href="#">Estado del pedido</a></p>
-                    <p><a href="#">Envíos a Provincia</a></p>
-                    <p><a href="#">Devoluciones</a></p>
-                    <p><a href="#">Opciones de pago</a></p>
+                    <p><a href="#">Envíos</a></p>
+                    <p><a href="#">Garantías</a></p>
                 </div>
-
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold">Productos</h5>
-                    <p><a href="#" onclick="cambiarVista('catalogo')">Laptops</a></p>
-                    <p><a href="#" onclick="cambiarVista('catalogo')">Periféricos</a></p>
-                    <p><a href="#" onclick="cambiarVista('catalogo')">Componentes</a></p>
-                    <p><a href="#" onclick="cambiarVista('catalogo')">Ofertas</a></p>
-                </div>
-
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                <div class="col-md-3 mx-auto mt-3">
                     <h5 class="text-uppercase mb-4 fw-bold">Contacto</h5>
-                    <p><i class="fas fa-home mr-3"></i> Cusco, Perú - Av. La Cultura</p>
+                    <p><i class="fas fa-map-marker-alt mr-3"></i> Cusco, Perú</p>
                     <p><i class="fas fa-envelope mr-3"></i> info@juancitostore.com</p>
-                    <p><i class="fas fa-phone mr-3"></i> +51 987 654 321</p>
+                    <p><i class="fas fa-phone mr-3"></i> 987 654 321</p>
                 </div>
             </div>
-
             <hr class="mb-4">
-
-            <div class="row align-items-center">
-                <div class="col-md-7 col-lg-8">
-                    <p> © 2026 <strong>Juancito Store</strong>. Todos los derechos reservados.</p>
-                </div>
-                <div class="col-md-5 col-lg-4">
-                    <div class="text-center text-md-end">
-                        <ul class="list-unstyled list-inline">
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-facebook"></i></a></li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-instagram"></i></a></li>
-                            <li class="list-inline-item"><a href="#" class="btn-floating btn-sm text-white" style="font-size: 20px;"><i class="fab fa-tiktok"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="text-center">
+                <p>© 2026 Juancito Store. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -229,85 +263,114 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- 1. BASE DE DATOS DE PRODUCTOS ---
+        // --- 1. DATOS ---
         const productos = [
-            {
-                id: 1,
-                nombre: "Samsung S23 Ultra",
-                precio: 3500.00,
-                modelo: "SM-S918B",
-                categoria: "celulares",
-                setup: [],
-                descripcion: "El Galaxy S23 Ultra incorpora la cámara más avanzada hasta la fecha, con un sensor de 200MP. Incluye el S-Pen integrado.",
-                portada: "https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg",
-                imagenes: [
-                    "https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg",
-                    "https://images.samsung.com/is/image/samsung/p6pim/pe/sm-s918bzphebp/gallery/pe-galaxy-s23-ultra-s918-sm-s918bzphebp-534855283?$650_519_PNG$",
-                    "https://img.global.news.samsung.com/latin/wp-content/uploads/2023/02/Galaxy-S23-Ultra_Green-Back_R30.jpg"
-                ]
-            },
-            {
-                id: 2,
-                nombre: "Kit Arduino UNO R3",
-                precio: 50.00,
-                modelo: "ARD-KIT-01",
-                categoria: "electronica",
-                setup: [],
-                descripcion: "El kit esencial para estudiantes de ingeniería. Incluye placa compatible Arduino UNO, cables y pines.",
-                portada: "https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png",
-                imagenes: ["https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png"]
-            },
-            {
-                id: 3,
-                nombre: "Teclado Mecánico RGB",
-                precio: 120.00,
-                modelo: "GM-K85-BLUE",
-                categoria: "perifericos",
-                setup: [4, 5], // RELACIÓN: Muestra Mouse (4) y Pad (5)
-                descripcion: "Teclado mecánico TKL con switches azules audibles y retroiluminación RGB.",
-                portada: "https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp",
-                imagenes: [
-                    "https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp",
-                    "https://m.media-amazon.com/images/I/61w0+7w6-sL._AC_SX466_.jpg"
-                ]
-            },
-            {
-                id: 4,
-                nombre: "Mouse Gamer Pro",
-                precio: 85.00,
-                modelo: "M-PRO-X",
-                categoria: "perifericos",
-                setup: [3, 5], // RELACIÓN: Muestra Teclado (3) y Pad (5)
-                descripcion: "Sensor óptico de alta precisión y peso ultraligero para eSports.",
-                portada: "https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1",
-                imagenes: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1"]
-            },
-            {
-                id: 5,
-                nombre: "Mousepad XXL Speed",
-                precio: 45.00,
-                modelo: "PAD-XXL",
-                categoria: "perifericos",
-                setup: [3, 4], // RELACIÓN: Muestra Teclado (3) y Mouse (4)
-                descripcion: "Superficie de tela optimizada de 90x40cm para cubrir todo tu escritorio.",
-                portada: "https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg",
-                imagenes: ["https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg"]
-            }
+            { id: 1, nombre: "Samsung S23 Ultra", precio: 3500.00, modelo: "SM-S918B", categoria: "celulares", setup: [], descripcion: "Cámara de 200MP, Snapdragon 8 Gen 2, S-Pen integrado.", portada: "https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg", imagenes: ["https://cdn.smart-gsm.com/img/picture/big/samsung-galaxy-s23-ultra.jpg", "https://images.samsung.com/is/image/samsung/p6pim/pe/sm-s918bzphebp/gallery/pe-galaxy-s23-ultra-s918-sm-s918bzphebp-534855283?$650_519_PNG$"] },
+            { id: 2, nombre: "Kit Arduino UNO R3", precio: 50.00, modelo: "ARD-KIT", categoria: "electronica", setup: [], descripcion: "Kit de inicio para estudiantes de ingeniería.", portada: "https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png", imagenes: ["https://robots-argentina.com.ar/didactica/wp-content/uploads/comparacion-UNO-NANO-1.png"] },
+            { id: 3, nombre: "Teclado Mecánico RGB", precio: 120.00, modelo: "GM-K85", categoria: "perifericos", setup: [4, 5], descripcion: "Switches azules, RGB y antighosting.", portada: "https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp", imagenes: ["https://http2.mlstatic.com/D_NQ_NP_813596-MLU79007985070_092024-O.webp"] },
+            { id: 4, nombre: "Mouse Gamer Pro", precio: 85.00, modelo: "M-PRO-X", categoria: "perifericos", setup: [3, 5], descripcion: "Sensor 16000 DPI, ultraligero.", portada: "https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1", imagenes: ["https://resource.logitechg.com/w_692,c_lpad,ar_4:3,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/pro-x-superlight/pro-x-superlight-black-gallery-1.png?v=1"] },
+            { id: 5, nombre: "Mousepad XXL", precio: 45.00, modelo: "PAD-XXL", categoria: "perifericos", setup: [3, 4], descripcion: "90x40cm, superficie speed.", portada: "https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg", imagenes: ["https://m.media-amazon.com/images/I/61MR7d+D3tL._AC_UF1000,1000_QL80_.jpg"] }
         ];
 
-        // --- 2. CARGAR CATÁLOGO ---
-        function cargarCatalogo() {
+        // --- 2. SISTEMA DE CARRITO (CON MEMORIA) ---
+        // Al iniciar, intentamos leer la memoria (LocalStorage)
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+        function guardarCarrito() {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarInterfazCarrito();
+        }
+
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({ nombre, precio });
+            guardarCarrito();
+            alert(`¡${nombre} agregado!`);
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1); // Borra el elemento en esa posición
+            guardarCarrito();
+        }
+
+        function vaciarCarrito() {
+            carrito = [];
+            guardarCarrito();
+        }
+
+        function actualizarInterfazCarrito() {
+            const tabla = document.getElementById('lista-carrito');
+            const totalEl = document.getElementById('total-precio');
+            const subtotalEl = document.getElementById('resumen-subtotal');
+            const contadorEl = document.getElementById('contador-carrito');
+            
+            tabla.innerHTML = "";
+            let total = 0;
+
+            carrito.forEach((prod, index) => {
+                total += prod.precio;
+                const fila = `
+                    <tr>
+                        <td>${prod.nombre}</td>
+                        <td class="text-end">S/ ${prod.precio.toFixed(2)}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-danger" onclick="eliminarDelCarrito(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tabla.innerHTML += fila;
+            });
+
+            totalEl.innerText = "S/ " + total.toFixed(2);
+            subtotalEl.innerText = "S/ " + total.toFixed(2);
+            contadorEl.innerText = carrito.length;
+        }
+
+        // --- 3. FINALIZAR COMPRA (WHATSAPP) ---
+        function finalizarCompraWhatsApp() {
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío.");
+                return;
+            }
+
+            // --- CONFIGURACIÓN ---
+            const numeroTelefono = "51987654321"; // <--- ¡PON TU NÚMERO AQUÍ! (Sin espacios, código de país 51)
+            // --------------------
+
+            let mensaje = "Hola Juancito Store, quiero realizar el siguiente pedido:%0A%0A";
+            let total = 0;
+
+            carrito.forEach(prod => {
+                mensaje += `- ${prod.nombre} (S/ ${prod.precio})%0A`;
+                total += prod.precio;
+            });
+
+            mensaje += `%0A*Total a Pagar: S/ ${total.toFixed(2)}*`;
+            mensaje += "%0A%0A¿Me confirman el stock y método de pago?";
+
+            window.open(`https://wa.me/${numeroTelefono}?text=${mensaje}`, '_blank');
+        }
+
+        // --- 4. CATÁLOGO Y FILTROS ---
+        function renderizarProductos(lista) {
             const contenedor = document.getElementById('contenedor-productos');
             contenedor.innerHTML = "";
             
-            productos.forEach(producto => {
+            if (lista.length === 0) {
+                contenedor.innerHTML = "<div class='col-12 text-center p-5'>No hay productos en esta categoría.</div>";
+                return;
+            }
+
+            lista.forEach(p => {
                 const html = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card shadow-sm h-100 cursor-pointer" onclick="verProducto(${producto.id})">
-                            <img src="${producto.portada}" class="card-img-top" alt="${producto.nombre}">
+                    <div class="col-md-4 mb-4 animacion-card">
+                        <div class="card shadow-sm h-100 cursor-pointer" onclick="verProducto(${p.id})">
+                            <img src="${p.portada}" class="card-img-top" alt="${p.nombre}">
                             <div class="card-body">
-                                <h5 class="card-title text-truncate">${producto.nombre}</h5>
-                                <p class="card-text text-muted">S/ ${producto.precio.toFixed(2)}</p>
+                                <span class="badge bg-light text-dark mb-2 border">${p.categoria.toUpperCase()}</span>
+                                <h5 class="card-title text-truncate">${p.nombre}</h5>
+                                <p class="card-text text-primary fw-bold">S/ ${p.precio.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -316,107 +379,109 @@
             });
         }
 
-        // --- 3. VISTA DETALLE Y RECOMENDACIONES ---
+        function filtrarCatalogo(categoria, boton) {
+            // Actualizar estilo de botones
+            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
+            boton.classList.add('active');
+
+            // Filtrar lógica
+            if (categoria === 'todos') {
+                renderizarProductos(productos);
+            } else {
+                const filtrados = productos.filter(p => p.categoria === categoria);
+                renderizarProductos(filtrados);
+            }
+        }
+        
+        // Helper para ir desde el Inicio a una categoría
+        function irACategoria(cat) {
+            cambiarVista('catalogo');
+            // Simulamos click en el botón correspondiente
+            const botones = document.querySelectorAll('.btn-filtro');
+            botones.forEach(btn => {
+                if(btn.innerText.toLowerCase() === cat || (cat === 'electronica' && btn.innerText === 'Electrónica')) {
+                    filtrarCatalogo(cat, btn);
+                }
+            });
+        }
+
+        // --- 5. VISTA DETALLE Y RECOMENDACIONES ---
         function verProducto(id) {
-            const producto = productos.find(p => p.id === id);
-
-            // Llenar info
-            document.getElementById('detalle-titulo').innerText = producto.nombre;
-            document.getElementById('detalle-precio').innerText = "S/ " + producto.precio.toFixed(2);
-            document.getElementById('detalle-modelo').innerText = "Modelo: " + producto.modelo;
-            document.getElementById('detalle-descripcion').innerText = producto.descripcion;
+            const p = productos.find(x => x.id === id);
             
-            const btn = document.getElementById('btn-agregar-detalle');
-            btn.onclick = function() { agregarAlCarrito(producto.nombre, producto.precio); };
+            document.getElementById('detalle-titulo').innerText = p.nombre;
+            document.getElementById('detalle-modelo').innerText = "Modelo: " + p.modelo;
+            document.getElementById('detalle-precio').innerText = "S/ " + p.precio.toFixed(2);
+            document.getElementById('detalle-descripcion').innerText = p.descripcion;
+            
+            document.getElementById('btn-agregar-detalle').onclick = () => agregarAlCarrito(p.nombre, p.precio);
 
-            // Fotos
-            const imgPrincipal = document.getElementById('detalle-img-principal');
-            imgPrincipal.src = producto.portada;
-            const divMiniaturas = document.getElementById('detalle-miniaturas');
-            divMiniaturas.innerHTML = ""; 
-
-            producto.imagenes.forEach(imgUrl => {
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.className = "img-miniatura";
-                img.onclick = function() { imgPrincipal.src = imgUrl; };
-                divMiniaturas.appendChild(img);
+            // Imágenes
+            const imgMain = document.getElementById('detalle-img-principal');
+            const galeria = document.getElementById('detalle-miniaturas');
+            imgMain.src = p.portada;
+            galeria.innerHTML = "";
+            
+            p.imagenes.forEach(url => {
+                const thumb = document.createElement('img');
+                thumb.src = url;
+                thumb.className = "img-miniatura";
+                thumb.onclick = () => imgMain.src = url;
+                galeria.appendChild(thumb);
             });
 
-            // --- GENERAR RECOMENDACIONES ---
-            function generarTarjetas(lista, contenedorID, mensajeVacio) {
-                const contenedor = document.getElementById(contenedorID);
-                contenedor.innerHTML = ""; 
-                
-                if(lista.length === 0) {
-                    contenedor.innerHTML = `<p class='text-muted small'>${mensajeVacio}</p>`;
-                    return;
-                }
-
-                lista.forEach(item => {
-                    const html = `
-                        <div class="col-6 col-md-3 mb-4">
-                            <div class="card h-100 shadow-sm cursor-pointer border-0 bg-light" onclick="verProducto(${item.id})">
-                                <img src="${item.portada}" class="card-img-top p-3 bg-white rounded" style="height: 150px; object-fit: contain;">
-                                <div class="card-body p-2 text-center">
-                                    <h6 class="card-title text-truncate small fw-bold">${item.nombre}</h6>
-                                    <p class="card-text text-primary small mb-2">S/ ${item.precio.toFixed(2)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    contenedor.innerHTML += html;
-                });
-            }
-
-            // A) "También te podría interesar" (Misma categoría)
-            const similares = productos.filter(p => p.categoria === producto.categoria && p.id !== producto.id);
-            generarTarjetas(similares, 'lista-similares', 'No hay productos similares por ahora.');
-
-            // B) "Completa el Setup" (Definido manualmente en setup[])
-            const setupItems = productos.filter(p => producto.setup.includes(p.id));
-            generarTarjetas(setupItems, 'lista-setup', 'No hay complementos sugeridos para este producto.');
+            // Recomendaciones
+            generarRecomendaciones(p);
 
             cambiarVista('detalle');
             window.scrollTo(0, 0);
         }
 
-        // --- 4. NAVEGACIÓN ---
-        function cambiarVista(vista) {
-            document.getElementById('vista-inicio').style.display = 'none';
-            document.getElementById('vista-catalogo').style.display = 'none';
-            document.getElementById('vista-carrito').style.display = 'none';
-            document.getElementById('vista-detalle').style.display = 'none';
+        function generarRecomendaciones(productoActual) {
+            // Setup
+            const setupList = productos.filter(p => productoActual.setup.includes(p.id));
+            pintarRecomendacion(setupList, 'lista-setup', 'No hay complementos sugeridos.');
+
+            // Similares (Misma categoría, distinto ID)
+            const similares = productos.filter(p => p.categoria === productoActual.categoria && p.id !== productoActual.id);
+            pintarRecomendacion(similares, 'lista-similares', 'No hay productos similares.');
+        }
+
+        function pintarRecomendacion(lista, divId, msgVacio) {
+            const div = document.getElementById(divId);
+            div.innerHTML = "";
+            if (lista.length === 0) {
+                div.innerHTML = `<p class='text-muted small'>${msgVacio}</p>`;
+                return;
+            }
+            lista.forEach(item => {
+                div.innerHTML += `
+                    <div class="col-6 col-md-3 mb-3">
+                        <div class="card h-100 shadow-sm border-0 cursor-pointer" onclick="verProducto(${item.id})">
+                            <img src="${item.portada}" class="card-img-top p-3" style="height:120px; object-fit:contain;">
+                            <div class="card-body p-2 text-center">
+                                <h6 class="small fw-bold text-truncate">${item.nombre}</h6>
+                                <p class="small text-primary mb-0">S/ ${item.precio.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- 6. NAVEGACIÓN ---
+        function cambiarVista(vistaId) {
+            ['vista-inicio', 'vista-catalogo', 'vista-detalle', 'vista-carrito'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById('vista-' + vistaId).style.display = 'block';
             
-            document.getElementById('vista-' + vista).style.display = 'block';
-            if(vista === 'catalogo') cargarCatalogo();
+            if (vistaId === 'catalogo') renderizarProductos(productos); // Resetea filtro
         }
 
-        // --- 5. CARRITO ---
-        let total = 0;
-        let conteo = 0;
-
-        function agregarAlCarrito(nombre, precio) {
-            total += precio;
-            conteo++;
-            document.getElementById('total-precio').innerText = total.toFixed(2);
-            document.getElementById('contador-carrito').innerText = conteo;
-            
-            const tabla = document.getElementById('lista-carrito');
-            tabla.innerHTML += `<tr><td>${nombre}</td><td>S/ ${precio.toFixed(2)}</td></tr>`;
-            alert(`¡Agregaste ${nombre} al carrito!`);
-        }
-
-        function vaciarCarrito() {
-            total = 0;
-            conteo = 0;
-            document.getElementById('total-precio').innerText = "0.00";
-            document.getElementById('contador-carrito').innerText = "0";
-            document.getElementById('lista-carrito').innerHTML = "";
-        }
-
-        // INICIAR
-        cargarCatalogo();
+        // --- INICIALIZACIÓN ---
+        renderizarProductos(productos);
+        actualizarInterfazCarrito(); // Carga el carrito guardado al abrir
     </script>
 </body>
 </html>
